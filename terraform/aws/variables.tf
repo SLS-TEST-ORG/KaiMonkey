@@ -14,7 +14,7 @@ variable "db_username" {
 variable "db_password" {
   default = "kHJ!4dusp7A#Xf21URhhZ1#"
 }
-
+# I am a comment
 variable "default_tags" {
   default     = {}
   description = "default tags to resources"
