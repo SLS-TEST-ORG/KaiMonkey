@@ -13,7 +13,8 @@ jobs:
     steps:
       - name: Fetch Bearer Token 
         run: |
-          RESPONSE=$(curl -k -X POST -H "Authorization: token ${{ secrets.BLACK_DUCK_API_TOKEN }}" "https://${{ vars.HOSTNAME }}/api/tokens/authenticate")
+          RESPONSE=$(curl -k -X POST -H "Authorization: token ${{ secrets.BLACKDUCK_API_TOKEN }}" ${{ vars.BLACKDUCK_URL }}/api/tokens/authenticate") #mod to my org secrets & vars
+          # RESPONSE=$(curl -k -X POST -H "Authorization: token ${{ secrets.BLACK_DUCK_API_TOKEN }}" "https://${{ vars.HOSTNAME }}/api/tokens/authenticate") #original from HonestJim
           BEARER_TOKEN=$(echo "${RESPONSE}" | jq -r '.bearerToken')
           echo "BEARER_TOKEN=${BEARER_TOKEN}" >> $GITHUB_ENV  
       
@@ -21,13 +22,15 @@ jobs:
         uses: actions/checkout@v3  
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          token: ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }} # my changes 
+          # token: ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}  #original from HonestJim
       
       - name: Get list of changed files 
         run: |
           URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/files"
           echo "Requesting URL: $URL"
-          RESPONSE=$(curl -s -X GET -G -H "Authorization: token ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}" $URL)
+          RESPONSE=$(curl -s -X GET -G -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $URL) # my changes 
+          # RESPONSE=$(curl -s -X GET -G -H "Authorization: token ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}" $URL) # orig from honestjim
           echo "API Response: $RESPONSE"
           FILES=$(echo "$RESPONSE" | jq -r '.[] | .filename' | tr '\n' ' ')
           echo "FILES=${FILES}" >> $GITHUB_ENV
@@ -107,7 +110,8 @@ jobs:
         id: comment
         uses: actions/github-script@v6
         with:
-          github-token: ${{secrets.WORKFLOW_GIT_ACCESS_TOKEN}}
+          github-token: ${{secrets.GITHUB_TOKEN}} # my changes
+          # github-token: ${{secrets.WORKFLOW_GIT_ACCESS_TOKEN}} # orig from honestjim
           script: |
             const fs = require('fs');
             const folderPath = '.snippet-licenses';
