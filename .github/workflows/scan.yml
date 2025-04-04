@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Fetch Bearer Token 
         run: |
-          RESPONSE=$(curl -k -X POST -H "Authorization: token ${{ secrets.BLACKDUCK_API_TOKEN }}" ${{ vars.BLACKDUCK_URL }}/api/tokens/authenticate") #mod to my org secrets & vars
+          RESPONSE=$(curl -k -X POST -H "Authorization: token ${{ secrets.BLACKDUCK_API_TOKEN }}"${{ vars.BLACKDUCK_URL }}/api/tokens/authenticate") #mod to my org secrets & vars
           # RESPONSE=$(curl -k -X POST -H "Authorization: token ${{ secrets.BLACK_DUCK_API_TOKEN }}" "https://${{ vars.HOSTNAME }}/api/tokens/authenticate") #original from HonestJim
           # BEARER_TOKEN=$(echo "${RESPONSE}" | jq -r '.bearerToken')
           # echo "BEARER_TOKEN=${BEARER_TOKEN}" >> $GITHUB_ENV  
